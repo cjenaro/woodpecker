@@ -1,0 +1,94 @@
+section {
+  padding: 50px 0;
+}
+
+input[type="radio"] {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.tabs-headers {
+  width: 100%;
+  display: flex;
+  margin: 0;
+}
+
+form {
+  overflow: hidden;
+}
+
+.tabs-headers label {
+  flex: 1;
+  padding: 20px;
+  text-transform: capitalize;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  background-color: var(--color-600);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  will-change: background-color;
+}
+
+[data-tab] {
+  display: none;
+  margin: 0;
+  grid-template-columns: 100%;
+  row-gap: 16px;
+}
+
+.error {
+  background-color: #ff3333;
+  margin: 5px 0;
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  color: var(--light);
+}
+
+.error:first-of-type {
+    margin-top: 16px;
+}
+
+[data-tab] label p {
+  font-size: 14px;
+  text-transform: none;
+  margin-bottom: 0;
+}
+
+input[value="login"]:checked ~ .tabs-headers label[for="login"] {
+  background-color: var(--color-100);
+}
+
+input[value="register"]:checked ~ .tabs-headers label[for="register"] {
+  background-color: var(--color-100);
+}
+
+input[value="register"]:checked ~ .tabs-content [data-tab="register"] {
+  display: grid;
+}
+
+input[value="login"]:checked ~ .tabs-content [data-tab="login"] {
+  display: grid;
+}
+
+.tabs-content {
+  margin: 0;
+  padding: 20px;
+}
+
+section form {
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  section {
+    padding: 100px 0;
+  }
+}

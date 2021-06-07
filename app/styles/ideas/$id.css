@@ -1,0 +1,22 @@
+section {
+  padding: 50px 0;
+}
+
+.hero p {
+  padding-left: 10px;
+  margin-left: 2px;
+  border-left: 2px solid var(--dark-muted);
+  margin-top: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .hero p {
+    border-left: 2px solid var(--light-muted);
+  }
+}
+
+@media (min-width: 1024px) {
+  section {
+    padding: 100px 0;
+  }
+}

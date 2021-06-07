@@ -1,0 +1,43 @@
+main form {
+  display: grid;
+  grid-template-columns: 100%;
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  background-color: var(--color-100);
+}
+
+main form label {
+  display: grid;
+  grid-template-columns: 100%;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin: 0;
+}
+
+main form label input,
+main form label textarea {
+  font-size: 1rem;
+  border-radius: 5px;
+  box-shadow: none;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-family: inherit;
+}
+
+main form button {
+  background-color: var(--color);
+  color: var(--background-color);
+  border-radius: 5px;
+  padding: 10px;
+  width: max-content;
+  border: 1px solid transparent;
+  margin: 0 auto;
+  display: block;
+}

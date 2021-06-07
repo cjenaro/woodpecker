@@ -1,0 +1,216 @@
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:root {
+  --color-600: #3b8da5;
+  --color-500: #4199b4;
+  --color-400: #4ba3be;
+  --color-300: #5aabc4;
+  --color-200: #69b3c9;
+  --color-100: #78bace;
+  --dark: #171923;
+  --light: #f7fafc;
+  --dark-muted: hsl(230, 21%, 18%);
+  --light-muted: hsl(204, 45%, 83%);
+  --background-color: var(--light);
+  --color: var(--dark);
+}
+
+a {
+  color: currentColor;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+* + * {
+  margin-bottom: 1em;
+}
+
+body {
+  color: var(--color);
+  background-color: var(--background-color);
+  font-size: 16px;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 100%;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+}
+
+header {
+  padding: 20px;
+  background-color: var(--color-600);
+}
+
+header nav {
+  display: flex;
+  align-items: flex-end;
+}
+
+header nav a:first-of-type {
+  margin-right: auto;
+}
+
+header form {
+  flex: 1;
+  margin: 0 10px;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  overflow: hidden;
+  max-width: 300px;
+}
+
+header form input {
+  display: block;
+  padding: 5px;
+  width: 100%;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--color-100);
+  color: var(--light);
+  position: relative;
+  z-index: 2;
+}
+
+header form input::placeholder {
+  color: var(--light-muted);
+}
+
+header form::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: -5%;
+  width: 110%;
+  height: 100%;
+  background-color: var(--color-200);
+  transform: translateX(-100%);
+  transition: transform 0.2s ease;
+}
+
+header form:focus-within::before {
+  transform: translateX(0);
+}
+
+header nav > a {
+  margin: 0;
+}
+
+footer {
+  margin: 0;
+  text-align: center;
+  padding: 20px;
+  background-color: var(--color-600);
+}
+
+.container {
+  max-width: 1000px;
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.5px;
+  font-weight: 300;
+}
+h2 {
+  font-size: 50px;
+  letter-spacing: -0.5px;
+  font-weight: 300;
+}
+h3 {
+  font-size: 40px;
+  letter-spacing: 0px;
+  font-weight: 300;
+}
+h4 {
+  font-size: 33px;
+  letter-spacing: 0.25px;
+  font-weight: 400;
+}
+h5 {
+  font-size: 24px;
+  letter-spacing: 0px;
+  font-weight: 400;
+}
+h6 {
+  font-size: 20px;
+  letter-spacing: 0.15px;
+  font-weight: 500;
+}
+p {
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+  color: var(--dark-muted);
+}
+.body2 {
+  font-size: 14px;
+  letter-spacing: 0.25px;
+  font-weight: 400;
+}
+.subtitle1 {
+  font-size: 16px;
+  letter-spacing: 0.15px;
+  font-weight: 400;
+}
+.subtitle2 {
+  font-size: 14px;
+  letter-spacing: 0.1px;
+  font-weight: 500;
+}
+button,
+a {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.overline {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.caption {
+  letter-spacing: 0.4px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+@media (min-width: 600px) {
+  h1 {
+    font-size: 96px;
+  }
+  h2 {
+    font-size: 60px;
+  }
+  h3 {
+    font-size: 48px;
+  }
+  h4 {
+    font-size: 34px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color: var(--light);
+    --background-color: var(--dark);
+  }
+
+  p {
+    color: var(--light-muted);
+  }
+}
