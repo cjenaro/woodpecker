@@ -5,6 +5,7 @@ import { prisma } from "../db";
 import Woman from "../components/woman";
 
 import stylesUrl from "../styles/index.css";
+import { NavLink } from "react-router-dom";
 
 export let meta: MetaFunction = () => {
   return {
@@ -40,16 +41,19 @@ export default function Index() {
           <p>To developers that can build them!</p>
         </div>
       </section>
-      <section>
+      <section className="trending">
         <div className="container">
           <h2>Trending ideas</h2>
-          {data?.length > 0
-            ? data.map((idea) => (
-                <div key={idea.id}>
+          {data?.length > 0 ? (
+            <ul>
+              {data.map((idea) => (
+                <li key={idea.id}>
                   <h5>{idea.title}</h5>
-                </div>
-              ))
-            : null}
+                  <NavLink to={`/ideas/${idea.id}`}>Read more &larr;</NavLink>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </section>
       <section className="why">

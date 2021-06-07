@@ -1,18 +1,26 @@
 import { Idea, Vote } from "@prisma/client";
 import { NavLink } from "react-router-dom";
-import { LoaderFunction, useRouteData } from "remix";
+import { json, LoaderFunction, useRouteData } from "remix";
 import { prisma } from "../../db";
 
 type Ideas = (Idea & {
   Vote: Vote[];
 })[];
 
+interface IdeasSession {
+  ideas: Ideas;
+  query?: string;
+}
+
 export let loader: LoaderFunction = async ({ request }) => {
-  const params = new URLSearchParams(await request.text());
+  const indexOfQ = request.url.indexOf("?");
+  const params = new URLSearchParams(request.url.slice(indexOfQ));
+  const query = params.get("query") || "";
+
   const ideas = await prisma.idea.findMany({
     where: {
       title: {
-        contains: params.get("search") || "",
+        contains: indexOfQ ? query : "",
       },
     },
     include: {
@@ -20,19 +28,23 @@ export let loader: LoaderFunction = async ({ request }) => {
     },
   });
 
-  return ideas;
+  return json({ ideas, query });
 };
 
 export default function Ideas() {
-  const data = useRouteData<Ideas>();
+  const { ideas, query } = useRouteData<IdeasSession>();
   return (
     <div>
       <div className="container">
         <h1>Ideas</h1>
-        <p>These are the latests ideas</p>
-        {data?.length ? (
+        <p>
+          {query
+            ? `Ideas that contain ${query}`
+            : "These are the latests ideas"}
+        </p>
+        {ideas?.length ? (
           <ul>
-            {data.map((idea) => (
+            {ideas.map((idea) => (
               <li key={idea.id}>
                 <h6>{idea.title}</h6>
                 <p>{idea.description}</p>

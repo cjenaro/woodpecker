@@ -2,11 +2,125 @@ section {
   padding: 50px 0;
 }
 
+.container {
+  max-width: 600px;
+}
+
 .hero p {
   padding-left: 10px;
   margin-left: 2px;
   border-left: 2px solid var(--dark-muted);
   margin-top: 10px;
+}
+
+.vote {
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  margin-bottom: 2em;
+}
+
+.vote label {
+  background-color: var(--color-100);
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  gap: 5px;
+  grid-template-columns: repeat(2, auto);
+  padding: 10px;
+  cursor: pointer;
+}
+
+.vote label img {
+  margin: 0 6px 0 0;
+  position: relative;
+  top: -5px;
+}
+
+.vote label:first-of-type {
+  border-radius: 5px 0 0 5px;
+}
+
+.vote label:last-of-type {
+  border-radius: 0 5px 5px 0;
+}
+
+.vote label.active {
+  background-color: var(--color-600);
+  cursor: not-allowed;
+}
+
+.vote input {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.comments {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 100%;
+  row-gap: 16px;
+  list-style: none;
+}
+
+.comments li {
+  background-color: var(--color-100);
+  border-radius: 5px;
+  margin: 0;
+  padding: 20px;
+}
+
+.comments li .user {
+  padding: 0;
+  border: 0;
+  margin: 0 0 10px 0;
+  color: var(--dark);
+}
+
+.comments li .description {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  color: var(--light);
+}
+
+form.comment {
+  display: grid;
+  grid-template-columns: 100%;
+  row-gap: 1rem;
+  margin-bottom: 2em;
+}
+
+form.comment label {
+  display: grid;
+  grid-template-columns: 100%;
+  row-gap: 5px;
+  margin: 0;
+}
+
+form.comment textarea {
+  font-size: inherit;
+  font-family: inherit;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--color-100);
+  min-height: 120px;
+}
+
+form.comment button {
+  padding: 10px 14px;
+  width: max-content;
+  background-color: var(--color-100);
+  margin: 0 0 0 auto;
+  border-radius: 5px;
+  border: 0;
 }
 
 @media (prefers-color-scheme: dark) {

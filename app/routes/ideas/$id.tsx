@@ -88,73 +88,89 @@ export let action: ActionFunction = async ({ request, params }) => {
   const session = await getSession(request);
   const user = await session.get("user");
 
-  if (!user) {
-    session.flash("error", "You need to login to be able to comment and vote!");
-    return redirect("/login", await commitSessionHeaders(session));
-  }
-
-  if (!body._method || body._method === "put") {
-    const vote = body.vote;
-
-    if (!vote) {
-      session.flash("error", "There was an error processing your vote");
-      return redirect(
-        `/ideas/${params.id}`,
-        await commitSessionHeaders(session)
-      );
+  try {
+    if (!user) {
+      throw new Error("You need to login to be able to comment and vote!");
     }
 
-    const dbVote = await prisma.vote.findMany({
-      where: {
-        AND: {
-          ideaId: Number(params.id),
-          userId: user.id,
+    if (!body._method || body._method === "put") {
+      const vote = body.vote;
+
+      if (!vote) {
+        throw new Error("There was an error processing your vote");
+      }
+
+      const dbVote = await prisma.vote.findMany({
+        where: {
+          AND: {
+            ideaId: Number(params.id),
+            userId: user.id,
+          },
         },
-      },
-    });
+      });
 
-    if (dbVote.length > 1) {
-      session.flash("error", "There shouldn't be more than one vote from you!");
-      return redirect(
-        `/ideas/${params.id}`,
-        await commitSessionHeaders(session)
-      );
-    }
+      if (dbVote.length > 1) {
+        throw new Error("There shouldn't be more than one vote from you!");
+      }
 
-    if (!dbVote || dbVote.length === 0) {
+      if (!dbVote || dbVote.length === 0) {
+        await prisma.idea.update({
+          where: {
+            id: Number(params.id),
+          },
+          data: {
+            Vote: {
+              create: {
+                type: vote,
+                userId: user.id,
+              },
+            },
+          },
+        });
+      } else {
+        const [thisVote] = dbVote;
+        await prisma.idea.update({
+          where: {
+            id: Number(params.id),
+          },
+          data: {
+            Vote: {
+              update: {
+                where: {
+                  id: thisVote.id,
+                },
+                data: {
+                  type: vote,
+                },
+              },
+            },
+          },
+        });
+      }
+    } else {
+      const comment = body?.comment;
+
+      if (!comment) {
+        throw new Error("There is no comment!");
+      }
+
       await prisma.idea.update({
         where: {
           id: Number(params.id),
         },
         data: {
-          Vote: {
+          Comment: {
             create: {
-              type: vote,
+              description: comment,
               userId: user.id,
             },
           },
         },
       });
-    } else {
-      const [thisVote] = dbVote;
-      await prisma.idea.update({
-        where: {
-          id: Number(params.id),
-        },
-        data: {
-          Vote: {
-            update: {
-              where: {
-                id: thisVote.id,
-              },
-              data: {
-                type: vote,
-              },
-            },
-          },
-        },
-      });
     }
+  } catch (err) {
+    session.flash("error", err.message);
+    return redirect(`/ideas/${params.id}`, await commitSessionHeaders(session));
   }
 
   return redirect(`/ideas/${params.id}`, await commitSessionHeaders(session));
@@ -176,28 +192,45 @@ export default function Idea() {
         <h1>{idea.title}</h1>
         <p>{idea.description}</p>
         <p>{idea.user.alias}</p>
-        <Form method="post">
+        <Form method="post" className="vote">
           <input type="hidden" name="_method" value="put" />
-          <label htmlFor="up">
-            :thumbsup: {idea.Vote.filter((vote) => vote.type === "up").length}
-            <input
-              disabled={!!vote && vote?.type === "up"}
-              type="submit"
-              name="vote"
-              id="up"
-              value="up"
-            />
+          <input
+            disabled={!!vote && vote?.type === "up"}
+            type="submit"
+            name="vote"
+            id="up"
+            value="up"
+          />
+          <label htmlFor="up" className={vote?.type === "up" ? "active" : ""}>
+            <img height="32" width="32" src="/assets/arrow_up.svg" alt="Up" />
+            {idea.Vote.filter((vote) => vote.type === "up").length}
           </label>
-          <label htmlFor="down">
-            :thumbsdown:{" "}
+          <input
+            disabled={!!vote && vote?.type === "down"}
+            type="submit"
+            name="vote"
+            id="down"
+            value="down"
+          />
+          <label
+            htmlFor="down"
+            className={vote?.type === "down" ? "active" : ""}
+          >
+            <img height="32" width="32" src="/assets/arrow_down.svg" alt="Down" />
             {idea.Vote.filter((vote) => vote.type === "down").length}
-            <input
-              disabled={!!vote && vote?.type === "down"}
-              type="submit"
-              name="vote"
-              value="down"
-            />
           </label>
+        </Form>
+        <Form method="post" className="comment">
+          <input type="hidden" value="post" name="_method" />
+          <label htmlFor="comment">
+            Leave a comment:
+            <textarea
+              name="comment"
+              id="comment"
+              placeholder="Cool idea! Would be nice to add X or Y feature!"
+            ></textarea>
+          </label>
+          <button type="submit">Send</button>
         </Form>
         {idea.Comment.length > 0 ? (
           <ul className="comments">
