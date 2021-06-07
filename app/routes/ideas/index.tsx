@@ -1,7 +1,9 @@
 import { Idea, Vote } from "@prisma/client";
+import { LinksFunction } from "@remix-run/react/routeModules";
 import { NavLink } from "react-router-dom";
 import { json, LoaderFunction, useRouteData } from "remix";
 import { prisma } from "../../db";
+import stylesUrl from "../../styles/ideas/index.css";
 
 type Ideas = (Idea & {
   Vote: Vote[];
@@ -11,6 +13,10 @@ interface IdeasSession {
   ideas: Ideas;
   query?: string;
 }
+
+export let links: LinksFunction = () => {
+  return [{ rel: "stylesheet", href: stylesUrl }];
+};
 
 export let loader: LoaderFunction = async ({ request }) => {
   const indexOfQ = request.url.indexOf("?");
@@ -34,13 +40,17 @@ export let loader: LoaderFunction = async ({ request }) => {
 export default function Ideas() {
   const { ideas, query } = useRouteData<IdeasSession>();
   return (
-    <div>
+    <section>
       <div className="container">
         <h1>Ideas</h1>
         <p>
-          {query
-            ? `Ideas that contain ${query}`
-            : "These are the latests ideas"}
+          {query ? (
+            <span>
+              Ideas that contain <span className="query">{query}</span>
+            </span>
+          ) : (
+            "These are the latests ideas"
+          )}
         </p>
         {ideas?.length ? (
           <ul>
@@ -59,6 +69,6 @@ export default function Ideas() {
           </h6>
         )}
       </div>
-    </div>
+    </section>
   );
 }

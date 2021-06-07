@@ -70,7 +70,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     const votes = await prisma.vote.findMany({
       where: {
         AND: {
-          userId: user.id,
+          userId: user?.id,
           ideaId: idea.id,
         },
       },
@@ -90,7 +90,11 @@ export let action: ActionFunction = async ({ request, params }) => {
 
   try {
     if (!user) {
-      throw new Error("You need to login to be able to comment and vote!");
+      session.flash(
+        "info",
+        "You need to login to be able to comment and vote!"
+      );
+      return redirect("/login", await commitSessionHeaders(session));
     }
 
     if (!body._method || body._method === "put") {
@@ -216,7 +220,12 @@ export default function Idea() {
             htmlFor="down"
             className={vote?.type === "down" ? "active" : ""}
           >
-            <img height="32" width="32" src="/assets/arrow_down.svg" alt="Down" />
+            <img
+              height="32"
+              width="32"
+              src="/assets/arrow_down.svg"
+              alt="Down"
+            />
             {idea.Vote.filter((vote) => vote.type === "down").length}
           </label>
         </Form>

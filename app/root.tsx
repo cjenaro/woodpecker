@@ -1,14 +1,34 @@
-import type { LinksFunction } from "remix";
+import {
+  json,
+  LinksFunction,
+  LoaderFunction,
+  useRouteData,
+  Form,
+  ActionFunction,
+  redirect,
+} from "remix";
 import { Meta, Links, LiveReload } from "remix";
 import { Outlet } from "react-router-dom";
 
 import stylesUrl from "./styles/global.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import { commitSessionHeaders, withSession } from "./sessions";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
+
+export let loader: LoaderFunction = ({ request }) => {
+  return withSession(request, async (session) => {
+    const info = session.get("info");
+    return json({ info }, await commitSessionHeaders(session));
+  });
+};
+
+interface GenericSession {
+  info?: string;
+}
 
 function Document({ children }: { children: React.ReactNode }) {
   return (
@@ -37,8 +57,17 @@ function Document({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const data = useRouteData<GenericSession>();
   return (
     <Document>
+      {data?.info ? (
+        <div className="flash-message">
+          <p>{data.info}</p>
+          <Form method="post" action="/clear-info">
+            <button type="submit">&times;</button>
+          </Form>
+        </div>
+      ) : null}
       <Header />
       <main>
         <Outlet />
