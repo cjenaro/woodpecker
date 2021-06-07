@@ -2,6 +2,10 @@
   outline: none;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --color-600: #3b8da5;
   --color-500: #4199b4;

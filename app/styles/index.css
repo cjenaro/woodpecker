@@ -22,6 +22,18 @@ main {
   margin-bottom: 0.4em;
 }
 
+.hero a {
+  margin-top: 1em;
+  padding: 10px 12px;
+  background-color: var(--color-100);
+  text-decoration: none;
+  display: block;
+  border-radius: 5px;
+  width: max-content;
+  margin-right: auto;
+  color: var(--dark);
+}
+
 .hero svg {
   --size: 2;
   --beack: var(--color-500);

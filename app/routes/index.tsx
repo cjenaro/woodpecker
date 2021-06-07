@@ -43,11 +43,11 @@ export default function Index() {
           <path
             d="M291.844 142.046C273.508 139.869 229.38 141.885 199.552 167.358C169.725 192.831 110.924 208.36 85.2522 212.94C107.217 281.779 165.751 313.165 215.5 303.614C255.3 295.973 312.009 239.628 335.389 212.41C320.669 201.02 324.981 170.849 327.8 158.49L291.844 142.046Z"
             fill="var(--face)"
-            />
+          />
           <path
             d="M327.8 158.49C324.98 170.849 320.669 201.02 335.389 212.41C337.366 213.94 451.714 193.895 501.853 176.215L327.8 158.49Z"
             fill="var(--beack)"
-            />
+          />
           <path
             d="M199.552 167.358C229.38 141.884 273.508 139.869 291.844 142.046C274.811 120.267 266.796 100.402 196.361 100.402C125.927 100.402 0.926549 154.12 0.926549 154.12C41.3513 158.09 75.7384 196.095 85.2522 212.94C110.924 208.36 169.725 192.831 199.552 167.358Z"
             fill="var(--crest)"
@@ -58,8 +58,8 @@ export default function Index() {
         <div className="container">
           <p>This is</p>
           <h1>Woodpecker!</h1>
-          <p>App ideas by people need them,</p>
-          <p>To developers that can build them!</p>
+          <p>A bridge between ideas and developers</p>
+          <NavLink to="/ideas">find ideas</NavLink>
         </div>
       </section>
       <section className="trending">
@@ -77,7 +77,7 @@ export default function Index() {
           ) : null}
         </div>
       </section>
-      <section className="why">
+      <section id="why" className="why">
         <div className="container">
           <h2>Why?</h2>
           <ul>
