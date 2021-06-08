@@ -15,6 +15,7 @@ export default function Footer() {
           @jenaroc
         </a>
       </p>
+      <p className="body2">fun fact, this website doesn't serve javascript</p>
     </footer>
   );
 }

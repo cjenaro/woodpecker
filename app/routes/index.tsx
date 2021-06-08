@@ -70,7 +70,7 @@ export default function Index() {
               {data.map((idea) => (
                 <li key={idea.id}>
                   <h5>{idea.title}</h5>
-                  <NavLink to={`/ideas/${idea.id}`}>Read more &larr;</NavLink>
+                  <NavLink to={`/ideas/${idea.id}`}>Read more &rarr;</NavLink>
                 </li>
               ))}
             </ul>

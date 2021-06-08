@@ -39,6 +39,12 @@ a {
   margin-bottom: 1em;
 }
 
+main {
+  margin: 0;
+  overflow: hidden;
+  width: 100vw;
+}
+
 body {
   color: var(--color);
   background-color: var(--background-color);
@@ -73,11 +79,23 @@ header form {
   position: relative;
   overflow: hidden;
   max-width: 300px;
+  font-size: 1rem;
+}
+
+header form::after {
+  content: "Enter to submit";
+  position: absolute;
+  top: 2.5px;
+  right: 5px;
+  font-size: inherit;
+  font-size: 1rem;
+  color: var(--color-600);
 }
 
 header form input {
   display: block;
   padding: 5px;
+  font-size: inherit;
   width: 100%;
   background-color: transparent;
   border: 0;
@@ -116,6 +134,10 @@ footer {
   text-align: center;
   padding: 20px;
   background-color: var(--color-600);
+}
+
+footer p + p {
+  margin: 1.5em 0 0 0;
 }
 
 .container {

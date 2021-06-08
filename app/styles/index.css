@@ -4,11 +4,6 @@ section {
   margin: 0;
 }
 
-main {
-  overflow: hidden;
-  width: 100vw;
-}
-
 .hero {
   min-height: 500px;
 }
@@ -86,6 +81,13 @@ main {
   box-shadow: 4px 4px 0 var(--dark);
   background-color: var(--color-100);
   position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform, box-shadow;
+}
+
+.trending ul li:hover {
+  transform: translate(-5px, -5px) scale(1.002);
+  box-shadow: 9px 9px 0 var(--light);
 }
 
 .trending ul li::after {
@@ -111,6 +113,10 @@ main {
 
   .trending ul li::after {
     background-color: var(--light);
+  }
+
+  .trending ul li:hover {
+    box-shadow: 9px 9px 0 var(--light);
   }
 }
 
