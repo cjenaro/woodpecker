@@ -35,8 +35,8 @@ export let links: LinksFunction = () => {
 
 export let meta: MetaFunction = ({ data }) => {
   return {
-    title: `${data?.title} | Woodpecker`,
-    description: data?.description,
+    title: `${data?.idea?.title} | Woodpecker`,
+    description: data?.idea?.description,
   };
 };
 
@@ -250,7 +250,9 @@ export default function Idea() {
               </li>
             ))}
           </ul>
-        ) : null}
+        ) : (
+          <h5>There are no comments yet! Be the first one!</h5>
+        )}
       </div>
     </section>
   );

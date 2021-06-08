@@ -1,7 +1,7 @@
 import { Idea, Vote } from "@prisma/client";
 import { LinksFunction } from "@remix-run/react/routeModules";
 import { NavLink } from "react-router-dom";
-import { json, LoaderFunction, useRouteData } from "remix";
+import { json, LoaderFunction, MetaFunction, useRouteData } from "remix";
 import { prisma } from "../../db";
 import stylesUrl from "../../styles/ideas/index.css";
 
@@ -13,6 +13,10 @@ interface IdeasSession {
   ideas: Ideas;
   query?: string;
 }
+
+export let meta: MetaFunction = () => ({
+  title: "Ideas | Woodpecker"
+})
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
@@ -43,13 +47,14 @@ export default function Ideas() {
     <section>
       <div className="container">
         <h1>Ideas</h1>
+        <NavLink to="new">Add a new idea</NavLink>
         <p>
           {query ? (
             <span>
               Ideas that contain <span className="query">{query}</span>
             </span>
           ) : (
-            "These are the latests ideas"
+            "Or check the latests ideas"
           )}
         </p>
         {ideas?.length ? (

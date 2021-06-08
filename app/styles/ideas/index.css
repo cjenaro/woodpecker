@@ -2,6 +2,11 @@ section {
   padding: 50px 0;
 }
 
+a[href*="new"] {
+  display: block;
+  margin-bottom: 1em;
+}
+
 ul {
   list-style: none;
   margin: 2em 0;

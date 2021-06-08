@@ -1,18 +1,10 @@
 import { Idea } from "@prisma/client";
-import type { MetaFunction, LinksFunction, LoaderFunction } from "remix";
+import type { LinksFunction, LoaderFunction } from "remix";
 import { useRouteData } from "remix";
 import { prisma } from "../db";
-import Woman from "../components/woman";
 
 import stylesUrl from "../styles/index.css";
 import { NavLink } from "react-router-dom";
-
-export let meta: MetaFunction = () => {
-  return {
-    title: "Woodpecker",
-    description: "App ideas by people who need them!",
-  };
-};
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
@@ -59,6 +51,7 @@ export default function Index() {
           <p>This is</p>
           <h1>Woodpecker!</h1>
           <p>A bridge between ideas and developers</p>
+          <NavLink to="/ideas/new">I have an idea</NavLink>
           <NavLink to="/ideas">find ideas</NavLink>
         </div>
       </section>

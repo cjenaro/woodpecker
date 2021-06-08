@@ -6,6 +6,7 @@ import {
   Form,
   ActionFunction,
   redirect,
+  MetaFunction,
 } from "remix";
 import { Meta, Links, LiveReload } from "remix";
 import { Outlet } from "react-router-dom";
@@ -17,6 +18,13 @@ import { commitSessionHeaders, withSession } from "./sessions";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
+};
+
+export let meta: MetaFunction = () => {
+  return {
+    title: "Woodpecker",
+    description: "App ideas by people who need them!",
+  };
 };
 
 export let loader: LoaderFunction = ({ request }) => {
@@ -35,7 +43,18 @@ function Document({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link
+          rel="icon"
+          type="image/png"
+          href="favicon-32x32.png"
+          sizes="32x32"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          href="favicon-16x16.png"
+          sizes="16x16"
+        />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
