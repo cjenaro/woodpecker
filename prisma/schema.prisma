@@ -8,6 +8,7 @@ datasource db {
 }
 
 model Idea {
+  createdAt   DateTime  @default(now())
   id          Int       @id @default(autoincrement())
   title       String
   description String
@@ -18,14 +19,16 @@ model Idea {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  password String
-  alias    String
-  salt     String
-  Vote     Vote[]
-  Comment  Comment[]
-  Idea     Idea[]
+  createdAt   DateTime      @default(now())
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String
+  alias       String
+  salt        String
+  Vote        Vote[]
+  Comment     Comment[]
+  Idea        Idea[]
+  CommentVote CommentVote[]
 }
 
 model Vote {
@@ -39,10 +42,22 @@ model Vote {
 }
 
 model Comment {
-  id          Int    @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   description String
-  user        User   @relation(fields: [userId], references: [id])
-  idea        Idea   @relation(fields: [ideaId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+  idea        Idea          @relation(fields: [ideaId], references: [id])
   userId      Int
   ideaId      Int
+  CommentVote CommentVote[]
+  createdAt   DateTime      @default(now())
+}
+
+model CommentVote {
+  id        Int      @id @default(autoincrement())
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  commentId Int
+  userId    Int
+  createdAt DateTime @default(now())
+  type      String
 }

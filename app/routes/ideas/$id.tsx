@@ -1,4 +1,4 @@
-import { Idea, Vote, User, Comment } from "@prisma/client";
+import { Idea, Vote, User, Comment, CommentVote } from "@prisma/client";
 import { LinksFunction, MetaFunction } from "@remix-run/react/routeModules";
 import {
   LoaderFunction,
@@ -17,6 +17,7 @@ type IdeaWithVotesAndComments =
       Vote: Vote[];
       Comment: (Comment & {
         user: User;
+        CommentVote: CommentVote[];
       })[];
       user: {
         alias: string;
@@ -27,6 +28,7 @@ type IdeaWithVotesAndComments =
 interface IdeaSession {
   idea: IdeaWithVotesAndComments;
   vote?: Vote;
+  commentVotes?: CommentVote[];
 }
 
 export let links: LinksFunction = () => {
@@ -50,7 +52,13 @@ export let loader: LoaderFunction = async ({ request, params }) => {
       Comment: {
         include: {
           user: true,
+          CommentVote: true,
         },
+        orderBy: [
+          {
+            createdAt: "asc",
+          },
+        ],
       },
       user: {
         select: {
@@ -76,8 +84,15 @@ export let loader: LoaderFunction = async ({ request, params }) => {
       },
     });
 
+    const commentVotes = await prisma.commentVote.findMany({
+      where: {
+        userId: user?.id,
+      },
+    });
+
     const [vote] = votes;
     sesh.vote = vote;
+    sesh.commentVotes = commentVotes;
 
     return json(sesh, await commitSessionHeaders(session));
   });
@@ -247,6 +262,46 @@ export default function Idea() {
               <li key={comm.id}>
                 <p className="user">{comm.user.alias}</p>
                 <p className="description">{comm.description}</p>
+                <Form method="post" action={`/vote-comment/${comm.id}`}>
+                  <input
+                    disabled={!!comm.comm && vote?.type === "up"}
+                    type="submit"
+                    name="vote"
+                    id="up"
+                    value="up"
+                  />
+                  <label
+                    htmlFor="up"
+                    className={vote?.type === "up" ? "active" : ""}
+                  >
+                    <img
+                      height="32"
+                      width="32"
+                      src="/assets/arrow_up.svg"
+                      alt="Up"
+                    />
+                    {idea.Vote.filter((vote) => vote.type === "up").length}
+                  </label>
+                  <input
+                    disabled={!!vote && vote?.type === "down"}
+                    type="submit"
+                    name="vote"
+                    id="down"
+                    value="down"
+                  />
+                  <label
+                    htmlFor="down"
+                    className={vote?.type === "down" ? "active" : ""}
+                  >
+                    <img
+                      height="32"
+                      width="32"
+                      src="/assets/arrow_down.svg"
+                      alt="Down"
+                    />
+                    {idea.Vote.filter((vote) => vote.type === "down").length}
+                  </label>
+                </Form>
               </li>
             ))}
           </ul>
