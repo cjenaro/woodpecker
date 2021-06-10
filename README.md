@@ -3,52 +3,77 @@
 - [Remix Docs](https://docs.remix.run)
 - [Customer Dashboard](https://remix.run/dashboard)
 
+## Vercel Setup
+
+First you'll need the [Vercel CLI](https://vercel.com/docs/cli):
+
+```sh
+npm i -g vercel
+```
+
+Before you can run the app in development, you need link this project to a new Vercel project on your account.
+
+**It is important that you use a new project. If you try to link this project to an existing project (like a Next.js site) you will have problems.**
+
+```sh
+$ vercel link
+```
+
+Follow the prompts, and when its done you should be able to get started.
+
 ## Development
 
-From your terminal:
+You will be running two processes during development when using Vercel as your server.
+
+- Your Vercel server in one
+- The Remix development server in another
 
 ```sh
-npm run dev
+# in one tab
+$ vercel dev
+
+# in another
+$ npm run dev
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
+Open up [http://localhost:3000](http://localhost:3000) and you should be ready to go!
 
-## Deployment
+If you'd rather run everything in a single tab, you can look at [concurrently](https://npm.im/concurrently) or similar tools to run both processes in one tab.
 
-First, build your app for production:
+## Deploying
+
+You will need to add your npmrc with your Remix token to your server's environment:
+
+When you ran `npm init remix`, we probably created an npmrc in your home directory. Go take a look, it should look something like this:
+
+```
+//npm.remix.run/:_authToken={your-token}
+@remix-run:registry=https://npm.remix.run
+```
+
+If it looks something like that, then you can run these commands to add your npmrc from the command line:
+
+```bash
+$ vercel env add NPM_RC development < ~/.npmrc
+$ vercel env add NPM_RC preview < ~/.npmrc
+$ vercel env add NPM_RC production < ~/.npmrc
+```
+
+You can also add this environment variable in your vercel project dashboard.
+
+Once that's done you can deploy!
 
 ```sh
-npm run build
+$ npm run build
+# preview deployment
+$ vercel
+
+# production deployment
+$ vercel --prod
 ```
 
-Then run the app in production mode:
+### GitHub Automatic Deployments
 
-```sh
-npm start
-```
+For some reason the GitHub integration doesn't deploy the public folder. We're working with Vercel to figure this out.
 
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
-
-### Using a Template
-
-When you ran `npm init remix` there were a few choices for hosting. You can run that again to create a new project, then copy over your `app/` folder to the new project that's pre-configured for your target server.
-
-```sh
-cd ..
-# create a new project, and pick a pre-configured host
-npm init remix
-cd my-new-remix-app
-# remove the new project's app (not the old one!)
-rm -rf app
-# copy your app over
-cp -R ../my-old-remix-app/app app
-```
+For now, [you can set up a GitHub action with this config](https://gist.github.com/mcansh/91f8effda798b41bb373351fad217070) from our friend @mcansh.
