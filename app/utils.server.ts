@@ -46,7 +46,7 @@ export async function handleLogin(variables: {
   return userCopy;
 }
 
-type RegisterUser = Omit<Omit<User, "salt">, "id">;
+type RegisterUser = Omit<Omit<Omit<User, "salt">, "id">, "createdAt">;
 
 export async function handleRegister(variables: RegisterUser) {
   const salt = genSalt();
@@ -68,6 +68,6 @@ export async function handleRegister(variables: RegisterUser) {
       password: newUser.password,
     });
   } catch (err) {
-    throw new Error(err);
+    throw new Error((err as Error).message);
   }
 }

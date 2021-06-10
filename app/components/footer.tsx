@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 export default function Footer() {
   return (
     <footer>
@@ -15,7 +17,10 @@ export default function Footer() {
           @jenaroc
         </a>
       </p>
-      <p className="body2">fun fact, this website doesn't serve javascript</p>
+      <p className="body2">
+        got feedback? reach me at my twitter above or leave a comment at{" "}
+        <NavLink to="/ideas/1">Woodpecker</NavLink>
+      </p>
     </footer>
   );
 }

@@ -1,4 +1,4 @@
-import { Idea, Vote, User, Comment, CommentVote } from "@prisma/client";
+import { Idea, Vote, User, Comment, CommentVote, Tag } from "@prisma/client";
 import { LinksFunction, MetaFunction } from "@remix-run/react/routeModules";
 import {
   LoaderFunction,
@@ -19,8 +19,10 @@ type IdeaWithVotesAndComments =
         user: User;
         CommentVote: CommentVote[];
       })[];
+      tags: Tag[];
       user: {
         alias: string;
+        id: number;
       };
     })
   | null;
@@ -29,6 +31,7 @@ interface IdeaSession {
   idea: IdeaWithVotesAndComments;
   vote?: Vote;
   commentVotes?: CommentVote[];
+  userId?: number;
 }
 
 export let links: LinksFunction = () => {
@@ -49,6 +52,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     },
     include: {
       Vote: true,
+      tags: true,
       Comment: {
         include: {
           user: true,
@@ -63,14 +67,15 @@ export let loader: LoaderFunction = async ({ request, params }) => {
       user: {
         select: {
           alias: true,
+          id: true,
         },
       },
     },
   });
 
   return withSession(request, async (session) => {
-    const user = session.get("user");
-    let sesh: IdeaSession = { idea };
+    const user = session.get("user") as User;
+    let sesh: IdeaSession = { idea, userId: user?.id };
     if (!idea?.id) {
       return json(sesh, await commitSessionHeaders(session));
     }
@@ -87,6 +92,11 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     const commentVotes = await prisma.commentVote.findMany({
       where: {
         userId: user?.id,
+        comment: {
+          idea: {
+            id: idea.id,
+          },
+        },
       },
     });
 
@@ -110,6 +120,27 @@ export let action: ActionFunction = async ({ request, params }) => {
         "You need to login to be able to comment and vote!"
       );
       return redirect("/login", await commitSessionHeaders(session));
+    }
+
+    if (body._method === "remove_tag") {
+      try {
+        if (!body.tagId) {
+          throw new Error("There is no tag id!");
+        }
+
+        await prisma.tag.delete({
+          where: {
+            id: Number(body.tagId),
+          },
+        });
+        return redirect(`/ideas/${params.id}`);
+      } catch (err) {
+        session.flash("error", (err as Error).message);
+        return redirect(
+          `/ideas/${params.id}`,
+          await commitSessionHeaders(session)
+        );
+      }
     }
 
     if (!body._method || body._method === "put") {
@@ -196,7 +227,7 @@ export let action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function Idea() {
-  const { idea, vote, commentVotes } = useRouteData<IdeaSession>();
+  const { idea, vote, commentVotes, userId } = useRouteData<IdeaSession>();
 
   if (!idea)
     return (
@@ -209,8 +240,8 @@ export default function Idea() {
     <section className="hero">
       <div className="container">
         <h1>{idea.title}</h1>
+        <p className="username">{idea.user.alias}</p>
         <p>{idea.description}</p>
-        <p>{idea.user.alias}</p>
         <Form method="post" className="vote">
           <input type="hidden" name="_method" value="put" />
           <input
@@ -244,6 +275,20 @@ export default function Idea() {
             {idea.Vote.filter((vote) => vote.type === "down").length}
           </label>
         </Form>
+        <ul className="tags">
+          {idea.tags.map((tag) => (
+            <li key={tag.id}>
+              {tag.slug}{" "}
+              {userId && idea.userId === userId ? (
+                <Form method="post">
+                  <input value="remove_tag" type="hidden" name="_method" />
+                  <input value={tag.id} type="hidden" name="tagId" />
+                  <button type="submit">&times;</button>
+                </Form>
+              ) : null}
+            </li>
+          ))}
+        </ul>
         <Form method="post" className="comment">
           <input type="hidden" value="post" name="_method" />
           <label htmlFor="comment">
@@ -281,8 +326,8 @@ export default function Idea() {
                       className={thisCommentVote?.type === "up" ? "active" : ""}
                     >
                       <img
-                        height="32"
-                        width="32"
+                        height="20"
+                        width="20"
                         src="/assets/arrow_up.svg"
                         alt="Up"
                       />
@@ -307,8 +352,8 @@ export default function Idea() {
                       }
                     >
                       <img
-                        height="32"
-                        width="32"
+                        height="20"
+                        width="20"
                         src="/assets/arrow_down.svg"
                         alt="Down"
                       />
@@ -323,7 +368,9 @@ export default function Idea() {
             })}
           </ul>
         ) : (
-          <h5>There are no comments yet! Be the first one!</h5>
+          <h5 className="no-comments">
+            There are no comments yet! Be the first one!
+          </h5>
         )}
       </div>
     </section>

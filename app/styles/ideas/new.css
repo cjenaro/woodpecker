@@ -1,3 +1,9 @@
 div.new {
   padding: 50px 0;
 }
+
+div.new form p {
+  text-transform: lowercase;
+  margin: 0;
+  font-size: 1rem;
+}

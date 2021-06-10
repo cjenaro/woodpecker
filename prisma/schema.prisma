@@ -16,6 +16,14 @@ model Idea {
   Comment     Comment[]
   user        User      @relation(fields: [userId], references: [id])
   userId      Int
+  tags        Tag[]
+}
+
+model Tag {
+  id     Int    @id @default(autoincrement())
+  slug   String
+  Idea   Idea?  @relation(fields: [ideaId], references: [id])
+  ideaId Int?
 }
 
 model User {

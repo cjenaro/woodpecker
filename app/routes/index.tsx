@@ -15,6 +15,10 @@ export let loader: LoaderFunction = async () => {
     include: {
       Vote: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 6,
   });
   return ideas;
 };

@@ -7,17 +7,20 @@ section {
 }
 
 .hero p {
+  margin-top: 10px;
+}
+
+.hero p.username {
   padding-left: 10px;
   margin-left: 2px;
   border-left: 2px solid var(--dark-muted);
-  margin-top: 10px;
 }
 
 .comments form,
 .vote {
   display: grid;
   grid-template-columns: repeat(2, 50%);
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 .comments form label,
@@ -68,14 +71,59 @@ section {
   width: 1px;
 }
 
+.no-comments {
+  text-align: center;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 1em 0 2em;
+  list-style: none;
+}
+
+.tags li {
+  margin: 0 1em 0 0;
+  padding: 2px 5px;
+  border: 1px solid currentColor;
+  transform: rotate(0);
+  will-change: transform;
+  transition: transform 0.1s ease;
+  display: flex;
+}
+
+.tags form {
+  margin: 0 0 0 5px;
+}
+
+.tags form button {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  color: currentColor;
+  border: 0;
+}
+
+.tags li:hover {
+  transform: rotate(-3deg);
+}
+
 .comments form {
-  margin-top: 2em;
+  margin-top: 1em;
   margin-bottom: 0;
+  max-width: 160px;
+  margin-left: auto;
 }
 
 .comments form label {
   margin: 0;
   border: 1px solid var(--light-muted);
+}
+
+.comments form label img {
+  margin-right: 2px;
+  top: -3px;
 }
 
 .comments {
@@ -146,7 +194,7 @@ form.comment button {
 }
 
 @media (prefers-color-scheme: dark) {
-  .hero p {
+  .hero p.username {
     border-left: 2px solid var(--light-muted);
   }
 }

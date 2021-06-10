@@ -70,7 +70,7 @@ export let action: ActionFunction = async ({ request }) => {
 
       session.set("user", user);
     } catch (err) {
-      errors.push(err.message);
+      errors.push((err as Error).message);
       return flashAndRedirect(session, "/login", errors);
     }
   } else {
@@ -109,7 +109,7 @@ export let action: ActionFunction = async ({ request }) => {
 
       session.set("user", user);
     } catch (err) {
-      errors.push(err.message);
+      errors.push((err as Error).message);
       return flashAndRedirect(session, "/login", errors);
     }
   }

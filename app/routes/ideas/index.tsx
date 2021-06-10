@@ -15,8 +15,8 @@ interface IdeasSession {
 }
 
 export let meta: MetaFunction = () => ({
-  title: "Ideas | Woodpecker"
-})
+  title: "Ideas | Woodpecker",
+});
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
@@ -26,17 +26,38 @@ export let loader: LoaderFunction = async ({ request }) => {
   const indexOfQ = request.url.indexOf("?");
   const params = new URLSearchParams(request.url.slice(indexOfQ));
   const query = params.get("query") || "";
-
-  const ideas = await prisma.idea.findMany({
-    where: {
-      title: {
-        contains: indexOfQ ? query : "",
+  const include = {
+    Vote: true,
+    tags: true,
+  };
+  let ideas = [];
+  console.log(indexOfQ, query);
+  if (indexOfQ === -1 || !query) {
+    ideas = await prisma.idea.findMany({
+      include,
+    });
+  } else {
+    console.log("FETCHING WITH FILTER");
+    ideas = await prisma.idea.findMany({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: query,
+            },
+          },
+          {
+            tags: {
+              some: {
+                slug: query,
+              },
+            },
+          },
+        ],
       },
-    },
-    include: {
-      Vote: true,
-    },
-  });
+      include,
+    });
+  }
 
   return json({ ideas, query });
 };
