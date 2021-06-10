@@ -1,0 +1,37 @@
+.notfound {
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  row-gap: 20px;
+  padding: 50px 20px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 190px;
+  text-align: center;
+}
+
+nav {
+  margin: 0 auto;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 1rem;
+}
+
+@media (max-width: 550px) {
+  nav {
+    grid-auto-flow: row;
+  }
+}
+
+nav a {
+  margin: 0;
+}
+
+img {
+  width: 450px;
+  max-width: 100%;
+  margin: 0 auto;
+}

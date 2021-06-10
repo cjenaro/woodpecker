@@ -188,7 +188,7 @@ export let action: ActionFunction = async ({ request, params }) => {
       });
     }
   } catch (err) {
-    session.flash("error", err.message);
+    session.flash("error", (err as Error).message);
     return redirect(`/ideas/${params.id}`, await commitSessionHeaders(session));
   }
 
@@ -196,7 +196,7 @@ export let action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function Idea() {
-  const { idea, vote } = useRouteData<IdeaSession>();
+  const { idea, vote, commentVotes } = useRouteData<IdeaSession>();
 
   if (!idea)
     return (
@@ -258,52 +258,69 @@ export default function Idea() {
         </Form>
         {idea.Comment.length > 0 ? (
           <ul className="comments">
-            {idea.Comment.map((comm) => (
-              <li key={comm.id}>
-                <p className="user">{comm.user.alias}</p>
-                <p className="description">{comm.description}</p>
-                <Form method="post" action={`/vote-comment/${comm.id}`}>
-                  <input
-                    disabled={!!comm.comm && vote?.type === "up"}
-                    type="submit"
-                    name="vote"
-                    id="up"
-                    value="up"
-                  />
-                  <label
-                    htmlFor="up"
-                    className={vote?.type === "up" ? "active" : ""}
-                  >
-                    <img
-                      height="32"
-                      width="32"
-                      src="/assets/arrow_up.svg"
-                      alt="Up"
+            {idea.Comment.map((comm) => {
+              const thisCommentVote = commentVotes?.find(
+                (c) => c.commentId === comm.id
+              );
+              return (
+                <li key={comm.id}>
+                  <p className="user">{comm.user.alias}</p>
+                  <p className="description">{comm.description}</p>
+                  <Form method="post" action={`/vote-comment/${comm.id}`}>
+                    <input
+                      disabled={
+                        !!thisCommentVote && thisCommentVote.type === "up"
+                      }
+                      type="submit"
+                      name="vote"
+                      id={comm.id + "-up"}
+                      value="up"
                     />
-                    {idea.Vote.filter((vote) => vote.type === "up").length}
-                  </label>
-                  <input
-                    disabled={!!vote && vote?.type === "down"}
-                    type="submit"
-                    name="vote"
-                    id="down"
-                    value="down"
-                  />
-                  <label
-                    htmlFor="down"
-                    className={vote?.type === "down" ? "active" : ""}
-                  >
-                    <img
-                      height="32"
-                      width="32"
-                      src="/assets/arrow_down.svg"
-                      alt="Down"
+                    <label
+                      htmlFor={comm.id + "-up"}
+                      className={thisCommentVote?.type === "up" ? "active" : ""}
+                    >
+                      <img
+                        height="32"
+                        width="32"
+                        src="/assets/arrow_up.svg"
+                        alt="Up"
+                      />
+                      {
+                        comm.CommentVote.filter((vote) => vote.type === "up")
+                          .length
+                      }
+                    </label>
+                    <input
+                      disabled={
+                        !!thisCommentVote && thisCommentVote.type === "down"
+                      }
+                      type="submit"
+                      name="vote"
+                      id={comm.id + "-down"}
+                      value="down"
                     />
-                    {idea.Vote.filter((vote) => vote.type === "down").length}
-                  </label>
-                </Form>
-              </li>
-            ))}
+                    <label
+                      htmlFor={comm.id + "-down"}
+                      className={
+                        thisCommentVote?.type === "down" ? "active" : ""
+                      }
+                    >
+                      <img
+                        height="32"
+                        width="32"
+                        src="/assets/arrow_down.svg"
+                        alt="Down"
+                      />
+                      {
+                        comm.CommentVote.filter((vote) => vote.type === "down")
+                          .length
+                      }
+                    </label>
+                  </Form>
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <h5>There are no comments yet! Be the first one!</h5>
