@@ -21,7 +21,7 @@ export let links: LinksFunction = () => {
 export let action: ActionFunction = async ({ request }) => {
   const body = Object.fromEntries(new URLSearchParams(await request.text()));
   const session = await getSession(request);
-  const user = session.get("user")
+  const user = session.get("user");
 
   try {
     const newIdea = await prisma.idea.create({
@@ -73,6 +73,17 @@ export default function NewIdea() {
               name="description"
               placeholder="Woodpecker would be an app where users..."
             />
+            <p>
+              You can use{" "}
+              <a
+                href="https://commonmark.org/help/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Markdown
+              </a>{" "}
+              if you want to.
+            </p>
           </label>
           <button type="submit">Add</button>
         </Form>

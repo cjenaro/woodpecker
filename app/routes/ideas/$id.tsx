@@ -1,13 +1,12 @@
 import { Idea, Vote, User, Comment, CommentVote, Tag } from "@prisma/client";
-import { LinksFunction, MetaFunction } from "@remix-run/react/routeModules";
-import {
+import type {
+  LinksFunction,
+  MetaFunction,
   LoaderFunction,
-  useRouteData,
   ActionFunction,
-  redirect,
-  Form,
-  json,
 } from "remix";
+import { useRouteData, redirect, Form, json } from "remix";
+import ReactMarkdown from "react-markdown";
 import { prisma } from "../../db";
 import { commitSessionHeaders, getSession, withSession } from "../../sessions";
 import stylesUrl from "../../styles/ideas/$id.css";
@@ -241,7 +240,9 @@ export default function Idea() {
       <div className="container">
         <h1>{idea.title}</h1>
         <p className="username">{idea.user.alias}</p>
-        <p>{idea.description}</p>
+        <div className="idea-description">
+          <ReactMarkdown children={idea.description} />
+        </div>
         <Form method="post" className="vote">
           <input type="hidden" name="_method" value="put" />
           <input

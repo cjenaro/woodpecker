@@ -2,6 +2,25 @@ section {
   padding: 50px 0;
 }
 
+.idea-description h1 {
+  font-size: 45px;
+}
+.idea-description h2 {
+  font-size: 40px;
+}
+.idea-description h3 {
+  font-size: 35px;
+}
+.idea-description h4 {
+  font-size: 30px;
+}
+.idea-description h5 {
+  font-size: 24px;
+}
+.idea-description h6 {
+  font-size: 20px;
+}
+
 .container {
   max-width: 600px;
 }
