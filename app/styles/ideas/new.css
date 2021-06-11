@@ -7,3 +7,7 @@ div.new form p {
   margin: 0;
   font-size: 1rem;
 }
+
+div.new textarea {
+  min-height: 200px;
+}
